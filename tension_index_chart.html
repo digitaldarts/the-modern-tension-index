@@ -50,16 +50,27 @@ const color = d3.scaleSequential()
     }))
   ]);
 
-  const dataMap = new Map(data.map(d => [d.country.toLowerCase(), d]));
-  const countries = topojson.feature(world, world.objects.countries).features;
-  
+// Normalize and map by lowercase country name
+const dataMap = new Map(
+  data.map(d => [(d.Country || d.country || "").trim().toLowerCase(), d])
+);
+
 // Alias fixes for mismatched country names between CSV and GeoJSON
-dataMap.set("united states of america", dataMap.get("united states"));
-dataMap.set("russian federation", dataMap.get("russia"));
-dataMap.set("turkiye", dataMap.get("turkey"));
-dataMap.set("united republic of tanzania", dataMap.get("tanzania"));
-dataMap.set("korea republic of", dataMap.get("south korea"));
-dataMap.set("viet nam", dataMap.get("vietnam"));
+function safeAlias(from, to) {
+  const val = dataMap.get(to);
+  if (val) dataMap.set(from, val);
+}
+
+// Map CSV names to GeoJSON names
+safeAlias("united states of america", "united states");
+safeAlias("russian federation", "russia");
+safeAlias("turkiye", "turkey");
+safeAlias("united republic of tanzania", "tanzania");
+safeAlias("korea republic of", "south korea");
+safeAlias("viet nam", "vietnam");
+
+const countries = topojson.feature(world, world.objects.countries).features;
+
   
   const g = svg.append("g");
 
@@ -101,6 +112,7 @@ dataMap.set("viet nam", dataMap.get("vietnam"));
 </script>
 </body>
 </html>
+
 
 
 
