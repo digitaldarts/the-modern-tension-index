@@ -1,43 +1,43 @@
-Country,Sleep_Minutes_WPR_2025,Screen_Hours,Annual_Work_Hours,Sleep_Hours,Sleep_Score,Screen_Score,Work_Score,Tension_Index_v1,Source_Sleep,Source_Screen,Source_Work,Data_Year_Sleep,Data_Year_Screen,Data_Year_Work,Tension_Index_Rescaled,Tension_Index_v2
-Philippines,368,8.9,2168,6.1,23.3,88.7,0,41.5,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024,10000.0,94.35542940853324
-Brazil,400,9.2,1708,6.7,16.7,92.2,0,39.8,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024,7458.9,71.44858346195095
-Colombia,397,8.7,1968,6.6,17.3,87.2,0,38.3,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024,7933.6,75.72808486148534
-South Africa,424,9.4,2191,7.1,11.7,94.0,0,38.2,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024,7735.5,73.94263217097864
-Malaysia,387,8.3,2197,6.4,19.4,82.8,0,37.7,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024,8698.6,82.6241269259947
-Chile,399,8.5,1914,6.6,16.9,85.2,0,37.4,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024,7618.3,72.88532974075915
-Egypt,392,8.2,2180,6.5,18.3,81.5,0,36.8,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024,8288.6,78.92772124414681
-Russia,405,8.4,1965,6.8,15.6,83.5,0,36.3,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024,7100.6,68.2187328328145
-Indonesia,385,7.6,2020,6.4,19.8,76.3,0,35.6,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024,7624.8,72.94445025767126
-Saudi Arabia,404,8.1,2105,6.7,15.8,80.8,0,35.4,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024,7456.4,71.4264786669108
-United Arab Emirates,405,8.1,2090,6.8,15.6,81.2,0,35.4,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024,7141.7,68.58902084913802
-Thailand,402,8.0,2093,6.7,16.1,80.1,0,35.3,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024,7336.2,70.34255892432049
-Mexico,397,7.6,2137,6.6,17.3,76.1,0,34.7,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024,7362.1,70.57662123629895
-Turkey,395,6.9,1832,6.6,17.8,69.3,0,32.7,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024,5968.9,58.01730452298115
-United States,426,6.7,1765,7.1,11.4,67.0,0,32.1,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024,4234.4,42.38208596018522
-Israel,396,7.2,1901,6.6,17.5,72.2,0,32.0,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024,6412.0,62.01147094985221
-Portugal,419,7.5,1865,7.0,12.8,75.1,0,31.7,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024,5483.7,53.643432652313805
-Singapore,398,6.9,2238,6.6,17.1,69.1,0,31.6,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024,6982.1,67.15116279069768
-Taiwan,381,7.2,2085,6.4,20.2,72.3,0,31.4,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024,7425.9,71.15095351453161
-Japan,378,6.7,1607,6.3,20.8,67.1,0,30.2,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024,6058.8,58.82753027964527
-Canada,454,6.2,1686,7.6,5.8,62.4,0,29.1,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024,2199.1,24.035040678054795
-United Kingdom,442,5.6,1668,7.4,8.2,56.3,0,28.4,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024,2167.1,23.746370366494887
-Spain,451,5.6,1577,7.5,6.7,55.7,0,28.0,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024,1662.7,19.199126272006705
-France,472,5.2,1500,7.9,2.0,51.8,0,27.5,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024,0.0,4.2110288539514
-Germany,460,5.2,1349,7.7,4.2,51.5,0,27.0,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024,177.8,5.813953488372086
-Italy,449,5.5,1668,7.5,6.2,55.2,0,26.9,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024,1799.5,20.4324168781228
-Netherlands,444,5.1,1425,7.4,7.1,50.9,0,26.6,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024,1109.2,14.209786276715407
-Sweden,461,5.1,1444,7.7,4.0,50.8,0,26.5,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024,324.6,7.137232845894249
-Denmark,457,5.2,1383,7.6,4.9,51.8,0,26.4,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024,540.0,9.078857875323738
-Norway,462,5.2,1395,7.7,3.8,52.1,0,26.3,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024,292.6,6.848824129541937
-Finland,459,5.2,1458,7.7,4.4,52.1,0,26.2,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024,449.8,8.266146964187609
-Austria,455,5.3,1417,7.6,5.4,52.9,0,26.2,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024,715.2,10.657715750647458
-Switzerland,463,5.2,1500,7.7,3.6,52.4,0,26.2,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024,554.7,9.211028853951388
-Poland,416,7.2,1786,6.9,14.1,72.3,0,26.1,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024,5293.0,51.92429434692755
-Greece,414,7.4,1986,6.9,14.4,74.0,0,26.1,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024,5972.7,58.051638893975465
-Romania,418,7.6,1925,7.0,13.6,76.2,0,26.1,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024,5723.7,55.807217411777
-Bulgaria,420,7.7,1885,7.0,13.3,76.7,0,26.1,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024,5714.2,55.72128338608836
-Slovakia,417,7.5,1776,6.9,13.9,75.4,0,26.1,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024,5538.9,54.14118293352865
-Ukraine,406,7.2,1960,6.8,15.3,72.2,0,26.0,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024,6004.6,58.33880503309178
-New Zealand,436,6.1,1730,7.3,9.3,61.0,0,26.0,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024,3050.7,31.7109634551495
-France,472,5.2,1500,7.9,2.0,51.8,0,27.5,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024,0.0,4.2110288539514
-Australia,440,8.0,1713,7.3,9.3,80.0,0,26.0,WorldPopulationReview 2025,DataReportal 2025 (Digital 2025 Australia Report),Wikipedia (OECD/ILO) 2025,2025,2025,2023,4723.8,46.793627540743444
+Country,Sleep_Minutes_WPR_2025,Screen_Hours,Annual_Work_Hours,Sleep_Hours,Sleep_Score,Screen_Score,Work_Score,Tension_Index_v1,Source_Sleep,Source_Screen,Source_Work,Data_Year_Sleep,Data_Year_Screen,Data_Year_Work
+Philippines,368,8.9,2168,6.1,23.3,88.7,0,10000.0,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024
+Brazil,400,9.2,1708,6.7,16.7,92.2,0,7458.9,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024
+Colombia,397,8.7,1968,6.6,17.3,87.2,0,7933.6,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024
+South Africa,424,9.4,2191,7.1,11.7,94.0,0,7735.5,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024
+Malaysia,387,8.3,2197,6.4,19.4,82.8,0,8698.6,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024
+Chile,399,8.5,1914,6.6,16.9,85.2,0,7618.3,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024
+Egypt,392,8.2,2180,6.5,18.3,81.5,0,8288.6,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024
+Russia,405,8.4,1965,6.8,15.6,83.5,0,7100.6,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024
+Indonesia,385,7.6,2020,6.4,19.8,76.3,0,7624.8,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024
+Saudi Arabia,404,8.1,2105,6.7,15.8,80.8,0,7456.4,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024
+United Arab Emirates,405,8.1,2090,6.8,15.6,81.2,0,7141.7,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024
+Thailand,402,8.0,2093,6.7,16.1,80.1,0,7336.2,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024
+Mexico,397,7.6,2137,6.6,17.3,76.1,0,7362.1,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024
+Turkey,395,6.9,1832,6.6,17.8,69.3,0,5968.9,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024
+United States,426,6.7,1765,7.1,11.4,67.0,0,4234.4,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024
+Israel,396,7.2,1901,6.6,17.5,72.2,0,6412.0,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024
+Portugal,419,7.5,1865,7.0,12.8,75.1,0,5483.7,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024
+Singapore,398,6.9,2238,6.6,17.1,69.1,0,6982.1,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024
+Taiwan,381,7.2,2085,6.4,20.2,72.3,0,7425.9,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024
+Japan,378,6.7,1607,6.3,20.8,67.1,0,6058.8,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024
+Canada,454,6.2,1686,7.6,5.8,62.4,0,2199.1,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024
+United Kingdom,442,5.6,1668,7.4,8.2,56.3,0,2167.1,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024
+Spain,451,5.6,1577,7.5,6.7,55.7,0,1662.7,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024
+France,472,5.2,1500,7.9,2.0,51.8,0,0.0,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024
+Germany,460,5.2,1349,7.7,4.2,51.5,0,177.8,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024
+Italy,449,5.5,1668,7.5,6.2,55.2,0,1799.5,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024
+Netherlands,444,5.1,1425,7.4,7.1,50.9,0,1109.2,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024
+Sweden,461,5.1,1444,7.7,4.0,50.8,0,324.6,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024
+Denmark,457,5.2,1383,7.6,4.9,51.8,0,540.0,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024
+Norway,462,5.2,1395,7.7,3.8,52.1,0,292.6,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024
+Finland,459,5.2,1458,7.7,4.4,52.1,0,449.8,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024
+Austria,455,5.3,1417,7.6,5.4,52.9,0,715.2,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024
+Switzerland,463,5.2,1500,7.7,3.6,52.4,0,554.7,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024
+Poland,416,7.2,1786,6.9,14.1,72.3,0,5293.0,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024
+Greece,414,7.4,1986,6.9,14.4,74.0,0,5972.7,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024
+Romania,418,7.6,1925,7.0,13.6,76.2,0,5723.7,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024
+Bulgaria,420,7.7,1885,7.0,13.3,76.7,0,5714.2,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024
+Slovakia,417,7.5,1776,6.9,13.9,75.4,0,5538.9,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024
+Ukraine,406,7.2,1960,6.8,15.3,72.2,0,6004.6,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024
+New Zealand,436,6.1,1730,7.3,9.3,61.0,0,3050.7,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024
+France,472,5.2,1500,7.9,2.0,51.8,0,0.0,WorldPopulationReview 2025,DataReportal 2025 (DemandSage / Comparitech),Wikipedia (OECD/ILO) 2025,2025,2025,2024
+Australia,440,8.0,1713,7.3,9.3,80.0,0,4723.8,WorldPopulationReview 2025,DataReportal 2025 (Digital 2025 Australia Report),Wikipedia (OECD/ILO) 2025,2025,2025,2023
