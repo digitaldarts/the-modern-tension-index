@@ -1,274 +1,423 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Tension Index 2025</title>
-    
-    <!-- Import Vega & Vega-Lite Libraries -->
-    <script src="https://cdn.jsdelivr.net/npm/vega@5.25.0"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.15.0"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.22.1"></script>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Modern Tension Index 2025 — Interactive</title>
+<meta name="description" content="Interactive choropleth map and ranking chart of the Modern Tension Index 2025, comparing countries by sleep, screen time, and annual work hours." />
 
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            color: #111;
-            margin: 0;
-            background-color: #fff;
-        }
-        .container {
-            padding: 20px 15px;
-        }
-        h1, h2 {
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin: 0;
-        }
-        h1 { font-size: 28px; }
-        h2 { font-size: 24px; }
-        .header-text {
-            max-width: 600px;
-            margin-bottom: 25px;
-        }
-        .header-text p {
-            font-size: 16px;
-            color: #555;
-            margin: 10px 0;
-            line-height: 1.5;
-        }
+<!-- D3 + TopoJSON (CDN) -->
+<script src="https://unpkg.com/d3@7"></script>
+<script src="https://unpkg.com/topojson-client@3"></script>
 
-        .chart-header-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-        .chart-title h3 {
-            font-size: 20px;
-            margin: 0 0 4px 0;
-            font-weight: 600;
-        }
-        .chart-title p {
-            font-size: 15px;
-            margin: 0;
-            color: #666;
-        }
-        .filters {
-            display: flex;
-            gap: 8px;
-        }
-        .filters button {
-            font-family: inherit;
-            font-size: 13px;
-            font-weight: 500;
-            padding: 8px 16px;
-            border: 1px solid #ddd;
-            border-radius: 20px;
-            background-color: #fff;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .filters button:hover {
-            background-color: #f0f0f0;
-            border-color: #ccc;
-        }
-        .filters button.active {
-            background-color: #222;
-            color: white;
-            border-color: #222;
-        }
-
-        .chart-wrapper { margin-top: 50px; }
-        #map-visualization, #barchart-visualization { width: 100%; }
-    </style>
+<style>
+  :root {
+    --bg: #ffffff;
+    --panel: #f8f8f8;
+    --border: #e5e5e5;
+    --text: #222;
+    --muted: #666;
+  }
+  html, body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; /* inherits well in iframe */
+  }
+  .wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 18px;
+  }
+  .header {
+    margin-bottom: 12px;
+  }
+  .header h1, .header h2, .header p {
+    margin: 0 0 8px 0; /* do not override theme font sizes; just spacing */
+  }
+  .controls {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin: 10px 0 18px 0;
+  }
+  .controls label {
+    font-size: 0.95rem;
+    color: var(--muted);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 18px;
+  }
+  @media (max-width: 950px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+  }
+  .legend {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 8px 0 6px 0;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+  .legend-bar {
+    height: 10px;
+    flex: 1;
+    background: linear-gradient(90deg, #2ecc71 0%, #f1c40f 50%, #e74c3c 100%); /* green->yellow->red */
+    border-radius: 999px;
+    border: 1px solid var(--border);
+  }
+  .svg-wrap {
+    width: 100%;
+    position: relative;
+  }
+  .tooltip {
+    position: fixed;
+    pointer-events: none;
+    background: #111;
+    color: #fff;
+    font-size: 12.5px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    line-height: 1.4;
+    opacity: 0;
+    transition: opacity .15s ease;
+    z-index: 10;
+    max-width: 260px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.18);
+  }
+  .rank-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin: 4px 0 8px 0;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+    align-items: center;
+    margin: 6px 0;
+  }
+  .bar {
+    height: 12px;
+    border-radius: 6px;
+    background: #ddd;
+    position: relative;
+    overflow: hidden;
+  }
+  .bar > span {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    background: linear-gradient(90deg, #2ecc71, #f1c40f, #e74c3c);
+  }
+  .row small {
+    color: var(--muted);
+  }
+  .foot {
+    margin-top: 8px;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+  /* inputs */
+  select, input[type="text"] {
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: #fff;
+    font-size: 0.95rem;
+  }
+</style>
 </head>
 <body>
+<div class="wrap">
+  <div class="header">
+    <h1>Modern Tension Index 2025</h1>
+    <p>Interactive choropleth of <em>Tension_Index_v1</em> (0–100) by country, with Top-20 ranking. Higher = more tension (less sleep, more screen time, longer work hours).</p>
+  </div>
 
-<div class="container">
+  <div class="controls">
+    <label>CSV:
+      <input type="text" id="csvInput" size="48" placeholder="Paste CSV URL or add ?csv=URL to iframe src" />
+    </label>
+    <button id="loadBtn">Load</button>
 
-    <!-- Section 1: Map -->
-    <div class="header-text">
-        <h1>Global Tension Map</h1>
-        <p>Each country's score runs from 0 to 100. Higher means more tension: less sleep, more screen time, and longer work hours.</p>
+    <label>Filter:
+      <select id="regionSelect">
+        <option value="All">All regions</option>
+        <option value="Africa">Africa</option>
+        <option value="Americas">Americas</option>
+        <option value="Asia">Asia</option>
+        <option value="Europe">Europe</option>
+        <option value="Oceania">Oceania</option>
+      </select>
+    </label>
+
+    <label>Show:
+      <select id="countSelect">
+        <option value="20">Top 20</option>
+        <option value="40" selected>Top 40</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="grid">
+    <!-- MAP CARD -->
+    <div class="card">
+      <div class="legend">
+        <span>Low</span>
+        <div class="legend-bar"></div>
+        <span>High</span>
+      </div>
+      <div class="svg-wrap">
+        <svg id="map" viewBox="0 0 960 520" role="img" aria-label="World choropleth map"></svg>
+      </div>
+      <div class="foot">Hover the map for details. Click a country to pin its tooltip.</div>
     </div>
 
-    <div class="chart-header-container">
-        <div class="chart-title">
-            <h3>Modern Tension Index 2025</h3>
-            <p>Comparing daily strain across 40 countries.</p>
-        </div>
-        <div class="filters">
-            <button id="filter-all" class="active">All Regions</button>
-            <button id="filter-americas">Americas</button>
-            <button id="filter-europe">Europe</button>
-            <button id="filter-asia-oceania">Asia & Oceania</button>
-        </div>
+    <!-- RANKING CARD -->
+    <div class="card">
+      <div class="rank-title">
+        <strong id="rankTitle">Top 20 by Tension Index</strong>
+        <small id="rankSubtitle"></small>
+      </div>
+      <div id="rankList" aria-live="polite"></div>
+      <div class="foot">Bars are colored on the same green→red scale as the map.</div>
     </div>
-    
-    <div id="map-visualization"></div>
+  </div>
 
-    <!-- Section 2: Bar Chart -->
-    <div class="chart-wrapper">
-        <h2>Top 10 Most Tense Countries</h2>
-        <div id="barchart-visualization"></div>
-    </div>
-
+  <p class="foot" style="margin-top:14px;">Data sources: WorldPopulationReview 2025, DataReportal 2025, OECD/ILO 2024.</p>
 </div>
 
+<div class="tooltip" id="tooltip"></div>
+
 <script>
-    const data = [
-      {"Country": "South Korea", "Sleep_Hours": 7.85, "Screen_Hours": 5.7, "Annual_Work_Hours": 1915, "Tension_Index_v1": 81.7, "Region": "Asia & Oceania"},
-      {"Country": "Mexico", "Sleep_Hours": 8.1, "Screen_Hours": 8.1, "Annual_Work_Hours": 2128, "Tension_Index_v1": 91.7, "Region": "Americas"},
-      {"Country": "Brazil", "Sleep_Hours": 7.5, "Screen_Hours": 9.5, "Annual_Work_Hours": 1491, "Tension_Index_v1": 77.0, "Region": "Americas"},
-      {"Country": "Japan", "Sleep_Hours": 6.48, "Screen_Hours": 4.5, "Annual_Work_Hours": 1607, "Tension_Index_v1": 70.3, "Region": "Asia & Oceania"},
-      {"Country": "Colombia", "Sleep_Hours": 7.8, "Screen_Hours": 9.1, "Annual_Work_Hours": 1964, "Tension_Index_v1": 89.7, "Region": "Americas"},
-      {"Country": "Indonesia", "Sleep_Hours": 7.4, "Screen_Hours": 8.6, "Annual_Work_Hours": 1740, "Tension_Index_v1": 84.7, "Region": "Asia & Oceania"},
-      {"Country": "Chile", "Sleep_Hours": 8.0, "Screen_Hours": 8.3, "Annual_Work_Hours": 1916, "Tension_Index_v1": 83.7, "Region": "Americas"},
-      {"Country": "United States", "Sleep_Hours": 7.4, "Screen_Hours": 7.1, "Annual_Work_Hours": 1791, "Tension_Index_v1": 87.7, "Region": "Americas"},
-      {"Country": "Philippines", "Sleep_Hours": 6.8, "Screen_Hours": 9.2, "Annual_Work_Hours": 1850, "Tension_Index_v1": 91.3, "Region": "Asia & Oceania"},
-      {"Country": "Thailand", "Sleep_Hours": 7.2, "Screen_Hours": 8.7, "Annual_Work_Hours": 1820, "Tension_Index_v1": 88.3, "Region": "Asia & Oceania"},
-      {"Country": "India", "Sleep_Hours": 7.9, "Screen_Hours": 6.9, "Annual_Work_Hours": 1900, "Tension_Index_v1": 85.0, "Region": "Asia & Oceania"},
-      {"Country": "United Kingdom", "Sleep_Hours": 7.42, "Screen_Hours": 5.9, "Annual_Work_Hours": 1532, "Tension_Index_v1": 72.0, "Region": "Europe"},
-      {"Country": "Germany", "Sleep_Hours": 7.75, "Screen_Hours": 5.5, "Annual_Work_Hours": 1341, "Tension_Index_v1": 60.7, "Region": "Europe"},
-      {"Country": "France", "Sleep_Hours": 7.29, "Screen_Hours": 5.3, "Annual_Work_Hours": 1511, "Tension_Index_v1": 69.3, "Region": "Europe"},
-      {"Country": "Italy", "Sleep_Hours": 7.6, "Screen_Hours": 6.2, "Annual_Work_Hours": 1669, "Tension_Index_v1": 77.3, "Region": "Europe"},
-      {"Country": "Spain", "Sleep_Hours": 7.6, "Screen_Hours": 6.4, "Annual_Work_Hours": 1644, "Tension_Index_v1": 77.0, "Region": "Europe"},
-      {"Country": "Canada", "Sleep_Hours": 7.5, "Screen_Hours": 6.7, "Annual_Work_Hours": 1685, "Tension_Index_v1": 81.0, "Region": "Americas"},
-      {"Country": "Australia", "Sleep_Hours": 7.35, "Screen_Hours": 6.1, "Annual_Work_Hours": 1707, "Tension_Index_v1": 79.7, "Region": "Asia & Oceania"},
-      {"Country": "Netherlands", "Sleep_Hours": 8.0, "Screen_Hours": 5.8, "Annual_Work_Hours": 1427, "Tension_Index_v1": 62.0, "Region": "Europe"},
-      {"Country": "Switzerland", "Sleep_Hours": 7.8, "Screen_Hours": 5.1, "Annual_Work_Hours": 1573, "Tension_Index_v1": 67.0, "Region": "Europe"},
-      {"Country": "Sweden", "Sleep_Hours": 7.5, "Screen_Hours": 6.0, "Annual_Work_Hours": 1440, "Tension_Index_v1": 68.7, "Region": "Europe"},
-      {"Country": "Norway", "Sleep_Hours": 7.6, "Screen_Hours": 5.9, "Annual_Work_Hours": 1427, "Tension_Index_v1": 66.7, "Region": "Europe"},
-      {"Country": "Denmark", "Sleep_Hours": 7.9, "Screen_Hours": 5.7, "Annual_Work_Hours": 1372, "Tension_Index_v1": 60.3, "Region": "Europe"},
-      {"Country": "Finland", "Sleep_Hours": 7.8, "Screen_Hours": 5.6, "Annual_Work_Hours": 1550, "Tension_Index_v1": 68.0, "Region": "Europe"},
-      {"Country": "Belgium", "Sleep_Hours": 7.7, "Screen_Hours": 5.9, "Annual_Work_Hours": 1585, "Tension_Index_v1": 71.7, "Region": "Europe"},
-      {"Country": "Austria", "Sleep_Hours": 7.9, "Screen_Hours": 5.4, "Annual_Work_Hours": 1400, "Tension_Index_v1": 60.3, "Region": "Europe"},
-      {"Country": "Portugal", "Sleep_Hours": 7.4, "Screen_Hours": 7.8, "Annual_Work_Hours": 1720, "Tension_Index_v1": 87.7, "Region": "Europe"},
-      {"Country": "Ireland", "Sleep_Hours": 7.5, "Screen_Hours": 6.3, "Annual_Work_Hours": 1775, "Tension_Index_v1": 83.0, "Region": "Europe"},
-      {"Country": "New Zealand", "Sleep_Hours": 7.6, "Screen_Hours": 5.9, "Annual_Work_Hours": 1748, "Tension_Index_v1": 79.3, "Region": "Asia & Oceania"},
-      {"Country": "Poland", "Sleep_Hours": 7.2, "Screen_Hours": 6.6, "Annual_Work_Hours": 1830, "Tension_Index_v1": 87.3, "Region": "Europe"},
-      {"Country": "Argentina", "Sleep_Hours": 8.2, "Screen_Hours": 9.4, "Annual_Work_Hours": 1600, "Tension_Index_v1": 73.3, "Region": "Americas"},
-      {"Country": "Malaysia", "Sleep_Hours": 7.1, "Screen_Hours": 8.2, "Annual_Work_Hours": 1870, "Tension_Index_v1": 88.3, "Region": "Asia & Oceania"},
-      {"Country": "Singapore", "Sleep_Hours": 7.0, "Screen_Hours": 7.3, "Annual_Work_Hours": 1890, "Tension_Index_v1": 92.3, "Region": "Asia & Oceania"},
-      {"Country": "Vietnam", "Sleep_Hours": 6.9, "Screen_Hours": 6.8, "Annual_Work_Hours": 1950, "Tension_Index_v1": 92.0, "Region": "Asia & Oceania"},
-      {"Country": "China", "Sleep_Hours": 8.5, "Screen_Hours": 5.9, "Annual_Work_Hours": 2174, "Tension_Index_v1": 78.0, "Region": "Asia & Oceania"},
-      {"Country": "Turkey", "Sleep_Hours": 8.3, "Screen_Hours": 7.9, "Annual_Work_Hours": 1832, "Tension_Index_v1": 82.7, "Region": "Asia & Oceania"},
-      {"Country": "Russia", "Sleep_Hours": 7.7, "Screen_Hours": 7.8, "Annual_Work_Hours": 1965, "Tension_Index_v1": 93.0, "Region": "Europe"},
-      {"Country": "South Africa", "Sleep_Hours": 7.6, "Screen_Hours": 9.3, "Annual_Work_Hours": 1500, "Tension_Index_v1": 75.7, "Region": "Asia & Oceania"},
-      {"Country": "Saudi Arabia", "Sleep_Hours": 7.2, "Screen_Hours": 8.5, "Annual_Work_Hours": 1980, "Tension_Index_v1": 92.3, "Region": "Asia & Oceania"},
-      {"Country": "United Arab Emirates", "Sleep_Hours": 7.0, "Screen_Hours": 8.0, "Annual_Work_Hours": 2050, "Tension_Index_v1": 99.0, "Region": "Asia & Oceania"}
-    ];
+(async function() {
+  // ----- CONFIG -----
+  // 1) Put your Shopify CSV file URL here:
+  const CSV_URL = "REPLACE_WITH_YOUR_SHOPIFY_FILE_URL.csv"; // e.g., https://cdn.shopify.com/s/files/.../modern_tension_index_TOP40_complete.csv
+  // 2) Optionally pass ?csv=URL in the iframe src to override:
+  const paramCsv = new URLSearchParams(window.location.search).get("csv");
+  const csvInputEl = document.getElementById("csvInput");
+  const loadBtn = document.getElementById("loadBtn");
+  csvInputEl.value = paramCsv || CSV_URL;
 
-    const mapSpec = {
-      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-      "width": "container", "height": 350,
-      "config": { "view": {"stroke": null}, "font": "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" },
-      "params": [{"name": "region_selection", "value": null}],
-      "layer": [
-        {
-            "data": { "url": "https://raw.githubusercontent.com/vega/vega-datasets/main/data/world-110m.json", "format": {"type": "topojson", "feature": "countries"} },
-            "mark": {"type": "geoshape", "fill": "#f0f0f0", "stroke": "#d9d9d9"}
-        },
-        {
-            "data": { "name": "source" },
-            "transform": [
-                {"filter": "region_selection == null || datum.Region == region_selection"},
-                {"lookup": "Country", "from": {"data": {"url": "https://raw.githubusercontent.com/vega/vega-datasets/main/data/world-110m.json", "format": {"type": "topojson", "feature": "countries"}}, "key": "properties.name"}, "as": "geo"},
-                {"filter": "datum.geo"}
-            ],
-            "mark": {"type": "geoshape", "stroke": "#fff", "strokeWidth": 0.5},
-            "encoding": {
-                "shape": {"field": "geo", "type": "geojson"},
-                "color": {
-                    "field": "Tension_Index_v1", "type": "quantitative",
-                    "scale": {"scheme": "redyellowgreen", "domain": [100, 0]},
-                    "legend": {"title": "Tension Index", "orient": "bottom-left", "gradientLength": 200, "padding": 10}
-                },
-                "tooltip": [
-                    {"field": "Country", "type": "nominal"},
-                    {"field": "Tension_Index_v1", "type": "quantitative", "title": "Tension Index", "format": ".1f"},
-                    {"field": "Sleep_Hours", "type": "quantitative", "title": "Sleep (h)", "format": ".1f"},
-                    {"field": "Screen_Hours", "type": "quantitative", "title": "Screen (h)", "format": ".1f"},
-                    {"field": "Annual_Work_Hours", "type": "quantitative", "title": "Work (hrs/yr)"}
-                ]
-            }
-        }
-      ],
-      "projection": {"type": "naturalEarth1"}
-    };
+  // Lightweight region mapping for filtering (covers common names in your CSV)
+  const REGION_BY_NAME = {
+    // Africa
+    "South Africa":"Africa","Egypt":"Africa",
+    // Americas
+    "United States":"Americas","Canada":"Americas","Mexico":"Americas","Brazil":"Americas","Chile":"Americas","Colombia":"Americas","Argentina":"Americas",
+    // Asia
+    "Japan":"Asia","South Korea":"Asia","Philippines":"Asia","Malaysia":"Asia","Thailand":"Asia","Indonesia":"Asia","Taiwan":"Asia","Turkey":"Asia","Israel":"Asia","Hong Kong":"Asia","Saudi Arabia":"Asia","United Arab Emirates":"Asia","Singapore":"Asia","India":"Asia","China":"Asia",
+    // Europe
+    "United Kingdom":"Europe","France":"Europe","Germany":"Europe","Italy":"Europe","Spain":"Europe","Netherlands":"Europe","Belgium":"Europe","Switzerland":"Europe","Austria":"Europe","Sweden":"Europe","Norway":"Europe","Denmark":"Europe","Finland":"Europe","Portugal":"Europe","Greece":"Europe","Poland":"Europe","Romania":"Europe","Bulgaria":"Europe","Slovakia":"Europe","Czechia":"Europe","Ukraine":"Europe","Russia":"Europe",
+    // Oceania
+    "Australia":"Oceania","New Zealand":"Oceania"
+  };
 
-    const barSpec = {
-        "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-        "width": "container", "height": 400,
-        "config": { "view": {"stroke": null}, "font": "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" },
-        "params": [{"name": "region_selection", "value": null}],
-        "data": { "name": "source" },
-        "transform": [
-            {"filter": "region_selection == null || datum.Region == region_selection"},
-            {"window": [{"op": "rank", "as": "rank"}], "sort": [{"field": "Tension_Index_v1", "order": "descending"}]},
-            {"filter": "datum.rank <= 10"}
-        ],
-        "mark": {"type": "bar", "cornerRadiusEnd": 3},
-        "encoding": {
-            "y": {
-                "field": "Country", "type": "nominal", "sort": "-x",
-                "axis": {"title": null, "labelFontSize": 12, "labelLimit": 200, "tickSize": 0, "domain": false, "minExtent": 150, "maxExtent": 150}
-            },
-            "x": {
-                "field": "Tension_Index_v1", "type": "quantitative",
-                "axis": {"title": "Tension / 100", "titleFontSize": 12, "grid": false, "domain": false, "ticks": false, "labelAngle": 0}
-            },
-            "color": {
-                "field": "Tension_Index_v1", "type": "quantitative",
-                "scale": {"scheme": "redyellowgreen", "domain": [100, 0]},
-                "legend": null
-            },
-             "tooltip": [
-                {"field": "Country", "type": "nominal"},
-                {"field": "Tension_Index_v1", "type": "quantitative", "title": "Tension Index", "format": ".1f"}
-            ]
-        }
-    };
+  // Map color scale (green -> yellow -> red)
+  const color = d3.scaleLinear()
+    .domain([20, 50, 80]) // adjust for your distribution if needed
+    .range(["#2ecc71", "#f1c40f", "#e74c3c"])
+    .clamp(true);
 
-    let mapView, barView;
+  // Tooltip helpers
+  const $tip = d3.select("#tooltip");
+  let pinned = null;
 
-    function init() {
-        const embedOpts = {actions: false};
-        Promise.all([
-            vegaEmbed('#map-visualization', mapSpec, embedOpts),
-            vegaEmbed('#barchart-visualization', barSpec, embedOpts)
-        ]).then(([mapResult, barResult]) => {
-            mapView = mapResult.view;
-            barView = barResult.view;
+  // Projection & path
+  const svg = d3.select("#map");
+  const width = 960, height = 520;
+  const projection = d3.geoNaturalEarth1()
+    .rotate([0,0])
+    .fitExtent([[10,10],[width-10,height-10]], {type:"Sphere"});
+  const path = d3.geoPath(projection);
 
-            mapView.data('source', data);
-            barView.data('source', data);
+  // Load world topology
+  // (Robust, small 110m world from world-atlas)
+  const world = await d3.json("https://unpkg.com/world-atlas@2/countries-110m.json");
+  const countries = topojson.feature(world, world.objects.countries).features;
 
-            document.querySelectorAll('.filters button').forEach(button => {
-                button.addEventListener('click', function() {
-                    const region = this.id === 'filter-all' ? null : 
-                                   this.id === 'filter-americas' ? 'Americas' :
-                                   this.id === 'filter-europe' ? 'Europe' : 'Asia & Oceania';
-                    handleFilterClick(this, region);
-                });
-            });
-        }).catch(console.error);
+  // Name normalization to match CSV country names
+  function normalizeName(n){
+    return (n||"").replace("United States of America","United States")
+      .replace("Russian Federation","Russia")
+      .replace("Korea, Republic of","South Korea")
+      .replace("Korea (South)","South Korea")
+      .replace("Czech Republic","Czechia")
+      .replace("Viet Nam","Vietnam")
+      .replace("Hong Kong SAR China","Hong Kong")
+      .replace("Iran, Islamic Republic of","Iran")
+      .replace("Syrian Arab Republic","Syria")
+      .replace("North Macedonia","Macedonia")
+      .replace("Myanmar","Burma")
+      .replace("Lao PDR","Laos")
+      .replace("Türkiye","Turkey")
+      .replace("UAE","United Arab Emirates")
+      .replace("United Republic of Tanzania","Tanzania")
+      .trim();
+  }
+
+  // Data load function
+  async function loadData(srcUrl) {
+    const text = await fetch(srcUrl, {cache:"no-store"}).then(r => {
+      if (!r.ok) throw new Error("Failed to fetch CSV: " + r.status);
+      return r.text();
+    });
+    const raw = d3.csvParse(text);
+
+    // Cast numeric fields & attach region
+    const data = raw.map(d => {
+      const obj = {
+        Country: d.Country?.trim(),
+        Sleep_Hours: +d.Sleep_Hours,
+        Screen_Hours: +d.Screen_Hours,
+        Annual_Work_Hours: +d.Annual_Work_Hours,
+        Tension: +d.Tension_Index_v1
+      };
+      obj.Region = REGION_BY_NAME[obj.Country] || "Unknown";
+      return obj;
+    }).filter(d => d.Country && isFinite(d.Tension));
+
+    return data;
+  }
+
+  // Draw map and ranking
+  async function draw(srcUrl) {
+    let data;
+    try {
+      data = await loadData(srcUrl);
+    } catch (err) {
+      console.error(err);
+      d3.select("#rankTitle").text("Error loading CSV");
+      d3.select("#rankSubtitle").text(err.message);
+      return;
     }
 
-    function handleFilterClick(activeBtn, region) {
-        document.querySelectorAll('.filters button').forEach(btn => btn.classList.remove('active'));
-        activeBtn.classList.add('active');
-        
-        mapView.signal('region_selection', region).runAsync();
-        barView.signal('region_selection', region).runAsync();
+    // Index by country name
+    const byName = new Map(data.map(d => [d.Country, d]));
+
+    // Clear SVG
+    svg.selectAll("*").remove();
+
+    // Graticule
+    const g = svg.append("g");
+    g.append("path")
+      .attr("d", path({type:"Sphere"}))
+      .attr("fill", "#f4f8fb");
+
+    // Countries
+    const countryG = g.append("g");
+
+    countryG.selectAll("path.country")
+      .data(countries)
+      .join("path")
+      .attr("class","country")
+      .attr("d", path)
+      .attr("fill", d => {
+        const cName = normalizeName(d.properties.name);
+        const row = byName.get(cName);
+        return row ? color(row.Tension) : "#ddd";
+      })
+      .attr("stroke", "#fff")
+      .attr("stroke-width", 0.6)
+      .on("mousemove", (event,d) => {
+        if (pinned) return;
+        const cName = normalizeName(d.properties.name);
+        showTooltip(event, byName.get(cName), cName);
+      })
+      .on("mouseleave", () => {
+        if (!pinned) hideTooltip();
+      })
+      .on("click", (event,d) => {
+        const cName = normalizeName(d.properties.name);
+        const row = byName.get(cName);
+        if (pinned && pinned.name === cName) {
+          pinned = null; hideTooltip();
+        } else {
+          pinned = {name: cName, row};
+          showTooltip(event, row, cName, true);
+        }
+      });
+
+    // Build ranking list (Top N & region filter)
+    function refreshRanking() {
+      const region = document.getElementById("regionSelect").value;
+      const limit = +document.getElementById("countSelect").value;
+
+      let rows = data.slice();
+      if (region !== "All") {
+        rows = rows.filter(d => d.Region === region);
+      }
+      rows.sort((a,b) => d3.descending(a.Tension, b.Tension));
+      rows = rows.slice(0, limit);
+
+      const maxScore = d3.max(rows, d => d.Tension) || 100;
+
+      d3.select("#rankTitle").text(`Top ${limit} by Tension Index`);
+      d3.select("#rankSubtitle").text(region === "All" ? "All regions" : region);
+
+      const list = d3.select("#rankList");
+      list.selectAll("*").remove();
+
+      rows.forEach((r, i) => {
+        const row = list.append("div").attr("class","row");
+        row.append("div").html(`<strong>${i+1}. ${r.Country}</strong> <small>(${r.Tension.toFixed(1)})</small>`);
+        const bar = row.append("div").attr("class","bar");
+        bar.append("span")
+          .style("width", `${(r.Tension/maxScore)*100}%`);
+      });
     }
 
-    init();
+    refreshRanking();
+    document.getElementById("regionSelect").addEventListener("change", refreshRanking);
+    document.getElementById("countSelect").addEventListener("change", refreshRanking);
+  }
+
+  function showTooltip(event, row, name, pin=false) {
+    const html = row ? `
+      <div style="font-weight:700;margin-bottom:4px;">${name}</div>
+      <div>Tension: <strong>${(row.Tension ?? 0).toFixed(1)}</strong> / 100</div>
+      <div>Sleep: ${isFinite(row.Sleep_Hours)? row.Sleep_Hours.toFixed(1) : "–"} h</div>
+      <div>Screen: ${isFinite(row.Screen_Hours)? row.Screen_Hours.toFixed(1) : "–"} h</div>
+      <div>Work: ${isFinite(row.Annual_Work_Hours)? row.Annual_Work_Hours.toFixed(0) : "–"} hrs/yr</div>
+    ` : `<div style="font-weight:700;margin-bottom:4px;">${name}</div><div>No data</div>`;
+
+    $tip.html(html)
+      .style("opacity", 1)
+      .style("left", (event.clientX + 14) + "px")
+      .style("top", (event.clientY + 14) + "px");
+    if (pin) $tip.style("opacity", 1);
+  }
+  function hideTooltip(){ $tip.style("opacity", 0); }
+
+  // Load on button or init
+  document.getElementById("loadBtn").addEventListener("click", () => {
+    const url = document.getElementById("csvInput").value.trim();
+    draw(url);
+  });
+
+  // Auto-load on init
+  if (csvInputEl.value && csvInputEl.value !== "REPLACE_WITH_YOUR_SHOPIFY_FILE_URL.csv") {
+    draw(csvInputEl.value);
+  } else {
+    // If user passes ?csv= param, it already set; otherwise prompt to paste
+    // You can call draw(CSV_URL) here if you hardcoded your URL above.
+  }
+})();
 </script>
-
 </body>
 </html>
