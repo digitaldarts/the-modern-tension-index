@@ -18,7 +18,7 @@
             background-color: #fff;
         }
         .container {
-            padding: 20px 10px;
+            padding: 20px 15px;
         }
         h1, h2 {
             font-weight: 700;
@@ -36,6 +36,7 @@
             font-size: 16px;
             color: #555;
             margin: 10px 0;
+            line-height: 1.5;
         }
 
         .chart-header-container {
@@ -91,7 +92,7 @@
         }
         .data-table th, .data-table td {
             text-align: left;
-            padding: 12px 10px;
+            padding: 14px 10px;
             border-bottom: 1px solid #eee;
         }
         .data-table th {
@@ -199,69 +200,51 @@
 
     const mapSpec = {
       "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-      "width": "container",
-      "height": 350,
+      "width": "container", "height": 350,
       "config": { "view": {"stroke": null}, "font": "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" },
+      "data": { "url": "https://raw.githubusercontent.com/vega/vega-datasets/main/data/world-110m.json", "format": {"type": "topojson", "feature": "countries"} },
       "params": [{"name": "region_selection", "value": null}],
-      "layer": [
-        {
-          "data": { "url": "https://raw.githubusercontent.com/vega/vega-datasets/main/data/world-110m.json", "format": {"type": "topojson", "feature": "countries"} },
-          "mark": {"type": "geoshape", "fill": "#f0f0f0", "stroke": "#d9d9d9", "strokeWidth": 0.5},
-          "projection": {"type": "naturalEarth1"}
+      "transform": [{
+        "lookup": "properties.name",
+        "from": { "data": {"name": "tensionData"}, "key": "Country", "fields": ["Tension_Index_v1", "Region", "Sleep_Hours", "Screen_Hours", "Annual_Work_Hours"]}
+      }],
+      "projection": {"type": "naturalEarth1"},
+      "mark": {"type": "geoshape", "stroke": "#fff", "strokeWidth": 0.5},
+      "encoding": {
+        "color": {
+          "condition": {
+            "test": "datum.Tension_Index_v1 !== null && (region_selection == null || datum.Region == region_selection)",
+            "field": "Tension_Index_v1", "type": "quantitative",
+            "scale": {"scheme": "redyellowgreen", "domain": [100, 0]},
+            "legend": {"title": "Tension Index", "orient": "bottom-left", "gradientLength": 200, "padding": 10}
+          },
+          "value": "#ddd"
         },
-        {
-          "data": {"name": "source"},
-          "transform": [
-            {"filter": "region_selection == null || datum.Region == region_selection"},
-            {"lookup": "Country", "from": {"data": {"url": "https://raw.githubusercontent.com/vega/vega-datasets/main/data/world-110m.json", "format": {"type": "topojson", "feature": "countries"}}, "key": "properties.name"}, "as": "geo"},
-            {"filter": "datum.geo"}
-          ],
-          "projection": {"type": "naturalEarth1"},
-          "mark": {"type": "geoshape", "stroke": "#fff", "strokeWidth": 0.5},
-          "encoding": {
-            "shape": {"field": "geo", "type": "geojson"},
-            "color": {
-              "field": "Tension_Index_v1", "type": "quantitative",
-              "scale": {"scheme": "redyellowgreen", "domain": [100, 0]},
-              "legend": {"title": "Tension Index", "orient": "bottom-left", "gradientLength": 200, "padding": 10}
-            },
-            "tooltip": [
-              {"field": "Country", "type": "nominal"},
+        "tooltip": {
+          "condition": {
+            "test": "datum.Tension_Index_v1 !== null && (region_selection == null || datum.Region == region_selection)",
+            "value": [
+              {"field": "properties.name", "type": "nominal", "title": "Country"},
               {"field": "Tension_Index_v1", "type": "quantitative", "title": "Tension Index", "format": ".1f"},
               {"field": "Sleep_Hours", "type": "quantitative", "title": "Sleep Hours", "format": ".1f"},
               {"field": "Screen_Hours", "type": "quantitative", "title": "Screen Hours", "format": ".1f"},
               {"field": "Annual_Work_Hours", "type": "quantitative", "title": "Annual Work Hours"}
             ]
-          }
+          },
+          "value": null
         }
-      ]
+      }
     };
 
     let vegaView;
 
     function updateTable(region = null) {
-        let filteredData = data;
-        if (region) {
-            filteredData = data.filter(d => d.Region === region);
-        }
-
-        const sortedData = filteredData.sort((a, b) => b.Tension_Index_v1 - a.Tension_Index_v1);
-        const top10 = sortedData.slice(0, 10);
-
+        let filteredData = region ? data.filter(d => d.Region === region) : data;
+        const top10 = filteredData.sort((a, b) => b.Tension_Index_v1 - a.Tension_Index_v1).slice(0, 10);
         const tableBody = document.getElementById('table-body');
-        tableBody.innerHTML = ''; // Clear existing rows
-
+        tableBody.innerHTML = '';
         top10.forEach((d, i) => {
-            const row = `
-                <tr>
-                    <td>${i + 1}</td>
-                    <td>${d.Country}</td>
-                    <td>${d.Tension_Index_v1.toFixed(1)}</td>
-                    <td>${d.Sleep_Hours.toFixed(1)}</td>
-                    <td>${d.Screen_Hours.toFixed(1)}</td>
-                    <td>${d.Annual_Work_Hours}</td>
-                </tr>
-            `;
+            const row = `<tr><td>${i + 1}</td><td>${d.Country}</td><td>${d.Tension_Index_v1.toFixed(1)}</td><td>${d.Sleep_Hours.toFixed(1)}</td><td>${d.Screen_Hours.toFixed(1)}</td><td>${d.Annual_Work_Hours}</td></tr>`;
             tableBody.innerHTML += row;
         });
     }
@@ -270,35 +253,29 @@
         vegaEmbed('#map-visualization', mapSpec, {actions: false})
             .then(result => {
                 vegaView = result.view;
-                vegaView.data('source', data).run(); // Load main data into map
+                vegaView.data('tensionData', data);
                 
-                // Attach event listeners
-                document.getElementById('filter-all').addEventListener('click', function() { handleFilterClick(this, null); });
-                document.getElementById('filter-americas').addEventListener('click', function() { handleFilterClick(this, 'Americas'); });
-                document.getElementById('filter-europe').addEventListener('click', function() { handleFilterClick(this, 'Europe'); });
-                document.getElementById('filter-asia-oceania').addEventListener('click', function() { handleFilterClick(this, 'Asia & Oceania'); });
-
-                // Initial table population
-                updateTable();
+                document.querySelectorAll('.filters button').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const region = this.id === 'filter-all' ? null : 
+                                       this.id === 'filter-americas' ? 'Americas' :
+                                       this.id === 'filter-europe' ? 'Europe' : 'Asia & Oceania';
+                        handleFilterClick(this, region);
+                    });
+                });
+                updateTable(); // Initial table population
             })
             .catch(console.error);
     }
 
     function handleFilterClick(activeBtn, region) {
-        // Update button styles
         document.querySelectorAll('.filters button').forEach(btn => btn.classList.remove('active'));
         activeBtn.classList.add('active');
-        
-        // Update Vega map signal
         vegaView.signal('region_selection', region).runAsync();
-
-        // Update HTML table
         updateTable(region);
     }
 
-    // Run the initialization
     init();
-
 </script>
 
 </body>
