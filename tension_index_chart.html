@@ -73,7 +73,7 @@ body {
 
 <script>
 (async function(){
-  const CSV_URL = "https://cdn.shopify.com/s/files/1/0674/7278/5560/files/modern_tension_index_2025.csv";
+  const CSV_URL = "https://raw.githubusercontent.com/digitaldarts/the-modern-tension-index/6eabd7ffaea429d6804bbdde8683607954bbc5c9/modern_tension_index_2025.csv";
 
   const csv = await d3.csv(CSV_URL);
   const data = new Map();
@@ -102,13 +102,13 @@ body {
     .replace("United States of America","United States")
     .replace("Russian Federation","Russia")
     .replace("Korea, Republic of","South Korea")
+    .replace("Republic of Korea","South Korea")
     .replace("United Kingdom of Great Britain and Northern Ireland","United Kingdom")
     .replace("Viet Nam","Vietnam")
     .replace("Iran, Islamic Republic of","Iran")
-    .replace("Turkey","Turkey")
-    .replace("UAE","United Arab Emirates")
-    .replace("Republic of Korea","South Korea")
+    .replace("Türkiye","Turkey")
     .replace("Czech Republic","Czechia")
+    .replace("UAE","United Arab Emirates")
     .trim();
 
   svg.append("path")
