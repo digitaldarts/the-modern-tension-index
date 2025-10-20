@@ -1,132 +1,153 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Modern Tension Index 2025 – Interactive Map</title>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modern Tension Index 2025 — World Map</title>
 <script src="https://unpkg.com/d3@7"></script>
-<script src="https://unpkg.com/topojson-client@3"></script>
-
+<script src="https://unpkg.com/topojson@3"></script>
 <style>
-body {
-  margin: 0;
-  background: #fff;
-  color: #222;
-  font: 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-}
-.wrap { max-width: 1200px; margin: 0 auto }
-.svg-wrap { position: relative; width: 100%; height: auto; }
-.tooltip {
-  position: fixed; pointer-events: none;
-  background: rgba(0,0,0,0.85); color: #fff;
-  font-size: 13px; padding: 8px 10px;
-  border-radius: 6px; line-height: 1.4;
-  opacity: 0; transition: opacity .15s ease;
-  z-index: 10; max-width: 260px;
-}
-.legend {
-  display:flex; align-items:center; gap:10px;
-  margin:10px 0 25px 0; font-size:0.9rem; color:#555;
-}
-.legend-bar {
-  height:10px; flex:1;
-  background:linear-gradient(90deg,#2ecc71 0%,#f1c40f 50%,#e74c3c 100%);
-  border-radius:999px; border:1px solid #ddd;
-}
-.country:hover { stroke:#000; stroke-width:1.2; cursor:pointer; }
+  body {
+    font-family: system-ui, sans-serif;
+    background: #fff;
+    margin: 0;
+  }
+  svg {
+    width: 100%;
+    height: 800px;
+    display: block;
+  }
+  .tooltip {
+    position: absolute;
+    background: rgba(0,0,0,0.75);
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 4px;
+    pointer-events: none;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+  .legend {
+    font-size: 13px;
+    fill: #333;
+  }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <h2>Modern Tension Index 2025</h2>
-  <p>Each country’s score runs 0–100. Higher means more tension: less sleep, more screen time, and longer work hours.</p>
-  <div class="legend"><span>Low</span><div class="legend-bar"></div><span>High</span></div>
-  <div class="svg-wrap"><svg id="map" viewBox="0 0 960 520"></svg></div>
-  <p style="color:#555;font-size:0.9rem;">Data sources: WorldPopulationReview 2025, DataReportal 2025, OECD/ILO 2024.</p>
-</div>
-<div class="tooltip" id="tooltip"></div>
+<svg></svg>
+<div class="tooltip" style="opacity:0;"></div>
 
 <script>
-(async function(){
-  // Use your latest GitHub raw CSV URL here
-  const CSV_URL = "https://raw.githubusercontent.com/digitaldarts/the-modern-tension-index/main/modern_tension_index_2025.csv";
+(async function() {
+  const csvUrl = "https://raw.githubusercontent.com/digitaldarts/the-modern-tension-index/main/modern_tension_index_2025.csv";
+  const worldUrl = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
 
-  const csv = await d3.csv(CSV_URL);
-  // ✅ Use the new normalized column
-  const data = new Map(csv.map(d => [d.Country?.trim().toLowerCase(), +d.Tension_Index_Rescaled]));
+  const svg = d3.select("svg");
+  const tooltip = d3.select(".tooltip");
+  const width = svg.node().clientWidth;
+  const height = svg.node().clientHeight;
 
-  const world = await d3.json("https://unpkg.com/world-atlas@2/countries-110m.json");
-  const countries = topojson.feature(world, world.objects.countries).features;
-
-  const svg = d3.select("#map");
-  const width = 960, height = 520;
-
-  const projection = d3.geoNaturalEarth1()
-    .rotate([-10,0])
-    .fitExtent([[0,0],[width,height]], {type:"Sphere"});
+  const projection = d3.geoNaturalEarth1().scale(width / 1.3 / Math.PI).translate([width / 2, height / 2]);
   const path = d3.geoPath(projection);
 
-  // ✅ Full 0–100 color scale
-  const color = d3.scaleLinear().domain([0,50,100])
-    .range(["#2ecc71","#f1c40f","#e74c3c"]).clamp(true);
+  const color = d3.scaleSequential()
+    .domain([0, 100])
+    .interpolator(d3.interpolateRdYlBu.reverse());
 
-  const tooltip = d3.select("#tooltip");
+  // Load data
+  const [world, csv] = await Promise.all([
+    d3.json(worldUrl),
+    d3.csv(csvUrl, d => ({
+      country: d.Country,
+      tension: +d.Tension_Index_v1 || 0,
+      sleep: +d.Sleep_Hours || null,
+      screen: +d.Screen_Hours || null,
+      work: +d.Annual_Work_Hours || null
+    }))
+  ]);
 
-  function normalizeName(name){
-    const n = name.trim().toLowerCase();
-    const map = {
-      "united states of america":"united states",
-      "russian federation":"russia",
-      "korea, republic of":"south korea",
-      "republic of korea":"south korea",
-      "united kingdom of great britain and northern ireland":"united kingdom",
-      "viet nam":"vietnam",
-      "iran, islamic republic of":"iran",
-      "türkiye":"turkey",
-      "czech republic":"czechia",
-      "hong kong sar china":"hong kong",
-      "australia":"australia"
-    };
-    return map[n] || n;
-  }
+  const dataMap = new Map(csv.map(d => [d.country.toLowerCase(), d]));
+
+  const countries = topojson.feature(world, world.objects.countries).features;
 
   const g = svg.append("g");
 
-  g.append("path")
-    .attr("d", path({type:"Sphere"}))
-    .attr("fill","#f8f8f8");
-
-  const country = g.selectAll("path.country")
+  g.selectAll("path")
     .data(countries)
     .join("path")
-    .attr("class","country")
     .attr("d", path)
-    .attr("fill", d=>{
-      const val = data.get(normalizeName(d.properties.name));
-      return isFinite(val)? color(val): "#ddd";
+    .attr("fill", d => {
+      const match = dataMap.get(d.properties.name.toLowerCase());
+      return match ? color(match.tension) : "#eee";
     })
-    .attr("stroke","#fff")
-    .attr("stroke-width",0.5)
-    .on("mousemove",(event,d)=>{
-      const n = normalizeName(d.properties.name);
-      const v = data.get(n);
-      if(!v){tooltip.style("opacity",0);return;}
-      tooltip.html(`<strong>${d.properties.name}</strong><br>Tension Index: ${v.toFixed(1)} / 100`)
-        .style("left",(event.clientX+14)+"px")
-        .style("top",(event.clientY+14)+"px")
-        .style("opacity",1);
+    .attr("stroke", "#ccc")
+    .attr("stroke-width", 0.5)
+    .on("mousemove", (event, d) => {
+      const match = dataMap.get(d.properties.name.toLowerCase());
+      if (match) {
+        tooltip
+          .style("opacity", 1)
+          .html(`
+            <strong>${d.properties.name}</strong><br>
+            Tension Index: ${match.tension.toFixed(1)} / 100<br>
+            Sleep: ${match.sleep ? match.sleep.toFixed(1) + " h" : "–"}<br>
+            Screen: ${match.screen ? match.screen.toFixed(1) + " h" : "–"}<br>
+            Work: ${match.work ? Math.round(match.work) + " hrs/yr" : "–"}
+          `)
+          .style("left", (event.pageX + 12) + "px")
+          .style("top", (event.pageY - 28) + "px");
+      }
     })
-    .on("mouseleave",()=>tooltip.style("opacity",0));
+    .on("mouseout", () => tooltip.style("opacity", 0));
 
+  // Zoom and pan
   const zoom = d3.zoom()
-    .scaleExtent([1,8])
-    .on("zoom", (event)=>{
-      g.attr("transform", event.transform);
-    });
+    .scaleExtent([1, 8])
+    .on("zoom", (event) => g.attr("transform", event.transform));
+
   svg.call(zoom);
+
+  // Legend
+  const legendWidth = 240, legendHeight = 10;
+  const legendSvg = svg.append("g")
+    .attr("transform", `translate(${width - legendWidth - 40},${height - 40})`);
+
+  const legendScale = d3.scaleLinear()
+    .domain(color.domain())
+    .range([0, legendWidth]);
+
+  const legendAxis = d3.axisBottom(legendScale)
+    .ticks(5)
+    .tickFormat(d => d);
+
+  const legendGradient = legendSvg.append("defs")
+    .append("linearGradient")
+    .attr("id", "legend-gradient")
+    .attr("x1", "0%")
+    .attr("x2", "100%")
+    .selectAll("stop")
+    .data(d3.ticks(0, 1, 10))
+    .join("stop")
+    .attr("offset", d => `${d * 100}%`)
+    .attr("stop-color", d => color(d * 100));
+
+  legendSvg.append("rect")
+    .attr("width", legendWidth)
+    .attr("height", legendHeight)
+    .style("fill", "url(#legend-gradient)");
+
+  legendSvg.append("g")
+    .attr("transform", `translate(0,${legendHeight})`)
+    .call(legendAxis)
+    .call(g => g.select(".domain").remove());
+
+  legendSvg.append("text")
+    .attr("x", legendWidth / 2)
+    .attr("y", -8)
+    .attr("text-anchor", "middle")
+    .attr("font-size", "12px")
+    .text("Modern Tension Index (0 = relaxed, 100 = tense)");
 })();
 </script>
 </body>
 </html>
-
