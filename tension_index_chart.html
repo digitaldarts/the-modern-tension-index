@@ -49,10 +49,10 @@ body {
 
 <script>
 (async function(){
-  const CSV_URL = "https://raw.githubusercontent.com/digitaldarts/the-modern-tension-index/6eabd7ffaea429d6804bbdde8683607954bbc5c9/modern_tension_index_2025.csv";
+  const CSV_URL = "https://raw.githubusercontent.com/digitaldarts/the-modern-tension-index/main/modern_tension_index_2025.csv";
 
   const csv = await d3.csv(CSV_URL);
-  const data = new Map(csv.map(d => [d.Country?.trim(), +d.Tension_Index_v1]));
+  const data = new Map(csv.map(d => [d.Country?.trim().toLowerCase(), +d.Tension_Index_Rescaled]));
 
   const world = await d3.json("https://unpkg.com/world-atlas@2/countries-110m.json");
   const countries = topojson.feature(world, world.objects.countries).features;
@@ -61,29 +61,32 @@ body {
   const width = 960, height = 520;
 
   const projection = d3.geoNaturalEarth1()
-    .rotate([-10,0])                // shift west slightly so Australia shows
+    .rotate([-10,0]) // ensure Australia visible
     .fitExtent([[0,0],[width,height]], {type:"Sphere"});
   const path = d3.geoPath(projection);
 
-  const color = d3.scaleLinear().domain([20,50,80])
+  const color = d3.scaleLinear().domain([0,50,100])
     .range(["#2ecc71","#f1c40f","#e74c3c"]).clamp(true);
 
   const tooltip = d3.select("#tooltip");
 
-  const nameFix = n => n
-    .replace("United States of America","United States")
-    .replace("Russian Federation","Russia")
-    .replace("Korea, Republic of","South Korea")
-    .replace("Republic of Korea","South Korea")
-    .replace("United Kingdom of Great Britain and Northern Ireland","United Kingdom")
-    .replace("Viet Nam","Vietnam")
-    .replace("Iran, Islamic Republic of","Iran")
-    .replace("Türkiye","Turkey")
-    .replace("Czech Republic","Czechia")
-    .replace("UAE","United Arab Emirates")
-    .replace("Hong Kong SAR China","Hong Kong")
-    .replace("Australia","Australia")
-    .trim();
+  function normalizeName(name){
+    const n = name.trim().toLowerCase();
+    const map = {
+      "united states of america":"united states",
+      "russian federation":"russia",
+      "korea, republic of":"south korea",
+      "republic of korea":"south korea",
+      "united kingdom of great britain and northern ireland":"united kingdom",
+      "viet nam":"vietnam",
+      "iran, islamic republic of":"iran",
+      "türkiye":"turkey",
+      "czech republic":"czechia",
+      "hong kong sar china":"hong kong",
+      "australia":"australia"
+    };
+    return map[n] || n;
+  }
 
   const g = svg.append("g");
 
@@ -97,24 +100,22 @@ body {
     .attr("class","country")
     .attr("d", path)
     .attr("fill", d=>{
-      const n=nameFix(d.properties.name);
-      const v=data.get(n);
-      return isFinite(v)? color(v):"#ddd";
+      const val = data.get(normalizeName(d.properties.name));
+      return isFinite(val)? color(val): "#ddd";
     })
     .attr("stroke","#fff")
     .attr("stroke-width",0.5)
     .on("mousemove",(event,d)=>{
-      const n=nameFix(d.properties.name);
-      const v=data.get(n);
+      const n = normalizeName(d.properties.name);
+      const v = data.get(n);
       if(!v){tooltip.style("opacity",0);return;}
-      tooltip.html(`<strong>${n}</strong><br>Tension: ${v.toFixed(1)} / 100`)
+      tooltip.html(`<strong>${d.properties.name}</strong><br>Tension: ${v.toFixed(1)} / 100`)
         .style("left",(event.clientX+14)+"px")
         .style("top",(event.clientY+14)+"px")
         .style("opacity",1);
     })
     .on("mouseleave",()=>tooltip.style("opacity",0));
 
-  // Zoom & pan
   const zoom = d3.zoom()
     .scaleExtent([1,8])
     .on("zoom", (event)=>{
