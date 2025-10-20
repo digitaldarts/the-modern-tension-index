@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Tension Index 2025</title>
+    
+    <!-- Import Vega & Vega-Lite Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/vega@5.22.1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.6.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.21.0"></script>
+
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #333;
+            margin: 1em;
+            background-color: #fff;
+        }
+        #visualization {
+            width: 100%;
+        }
+        .chart-header {
+            margin-bottom: 1em;
+        }
+        h1 {
+            font-size: 24px;
+            margin: 0;
+            font-weight: 600;
+        }
+        p {
+            font-size: 16px;
+            margin: 4px 0 0 0;
+            color: #555;
+        }
+        .filters {
+            margin-bottom: 1em;
+        }
+        .filters button {
+            font-family: inherit;
+            font-size: 14px;
+            padding: 8px 12px;
+            margin-right: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f7f7f7;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+        .filters button:hover {
+            background-color: #e9e9e9;
+        }
+        .filters button.active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="chart-header">
+        <h1>Modern Tension Index 2025</h1>
+        <p>Comparing 40 countries by sleep, screen time, and work hours.</p>
+    </div>
+
+    <div class="filters">
+        <button id="filter-all" class="active">All</button>
+        <button id="filter-americas">Americas</button>
+        <button id="filter-europe">Europe</button>
+        <button id="filter-asia-oceania">Asia & Oceania</button>
+    </div>
+
+    <div id="visualization"></div>
+
+    <script>
+        const spec = {
+          "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+          "config": {
+              "view": {"stroke": null},
+              "font": "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+          },
+          "data": {
+            "values": [
+              {"Country": "South Korea", "Sleep_Hours": 7.85, "Screen_Hours": 5.7, "Annual_Work_Hours": 1915, "Sleep_Score": 85, "Screen_Score": 71, "Work_Score": 89, "Tension_Index_v1": 81.7, "Region": "Asia & Oceania"},
+              {"Country": "Mexico", "Sleep_Hours": 8.1, "Screen_Hours": 8.1, "Annual_Work_Hours": 2128, "Sleep_Score": 75, "Screen_Score": 100, "Work_Score": 100, "Tension_Index_v1": 91.7, "Region": "Americas"},
+              {"Country": "Brazil", "Sleep_Hours": 7.5, "Screen_Hours": 9.5, "Annual_Work_Hours": 1491, "Sleep_Score": 95, "Screen_Score": 95, "Work_Score": 41, "Tension_Index_v1": 77.0, "Region": "Americas"},
+              {"Country": "Japan", "Sleep_Hours": 6.48, "Screen_Hours": 4.5, "Annual_Work_Hours": 1607, "Sleep_Score": 100, "Screen_Score": 56, "Work_Score": 55, "Tension_Index_v1": 70.3, "Region": "Asia & Oceania"},
+              {"Country": "Colombia", "Sleep_Hours": 7.8, "Screen_Hours": 9.1, "Annual_Work_Hours": 1964, "Sleep_Score": 86, "Screen_Score": 91, "Work_Score": 92, "Tension_Index_v1": 89.7, "Region": "Americas"},
+              {"Country": "Indonesia", "Sleep_Hours": 7.4, "Screen_Hours": 8.6, "Annual_Work_Hours": 1740, "Sleep_Score": 97, "Screen_Score": 86, "Work_Score": 71, "Tension_Index_v1": 84.7, "Region": "Asia & Oceania"},
+              {"Country": "Chile", "Sleep_Hours": 8.0, "Screen_Hours": 8.3, "Annual_Work_Hours": 1916, "Sleep_Score": 79, "Screen_Score": 83, "Work_Score": 89, "Tension_Index_v1": 83.7, "Region": "Americas"},
+              {"Country": "United States", "Sleep_Hours": 7.4, "Screen_Hours": 7.1, "Annual_Work_Hours": 1791, "Sleep_Score": 97, "Screen_Score": 89, "Work_Score": 77, "Tension_Index_v1": 87.7, "Region": "Americas"},
+              {"Country": "Philippines", "Sleep_Hours": 6.8, "Screen_Hours": 9.2, "Annual_Work_Hours": 1850, "Sleep_Score": 100, "Screen_Score": 92, "Work_Score": 82, "Tension_Index_v1": 91.3, "Region": "Asia & Oceania"},
+              {"Country": "Thailand", "Sleep_Hours": 7.2, "Screen_Hours": 8.7, "Annual_Work_Hours": 1820, "Sleep_Score": 98, "Screen_Score": 87, "Work_Score": 80, "Tension_Index_v1": 88.3, "Region": "Asia & Oceania"},
+              {"Country": "India", "Sleep_Hours": 7.9, "Screen_Hours": 6.9, "Annual_Work_Hours": 1900, "Sleep_Score": 82, "Screen_Score": 86, "Work_Score": 87, "Tension_Index_v1": 85.0, "Region": "Asia & Oceania"},
+              {"Country": "United Kingdom", "Sleep_Hours": 7.42, "Screen_Hours": 5.9, "Annual_Work_Hours": 1532, "Sleep_Score": 96, "Screen_Score": 74, "Work_Score": 46, "Tension_Index_v1": 72.0, "Region": "Europe"},
+              {"Country": "Germany", "Sleep_Hours": 7.75, "Screen_Hours": 5.5, "Annual_Work_Hours": 1341, "Sleep_Score": 88, "Screen_Score": 69, "Work_Score": 25, "Tension_Index_v1": 60.7, "Region": "Europe"},
+              {"Country": "France", "Sleep_Hours": 7.29, "Screen_Hours": 5.3, "Annual_Work_Hours": 1511, "Sleep_Score": 98, "Screen_Score": 66, "Work_Score": 44, "Tension_Index_v1": 69.3, "Region": "Europe"},
+              {"Country": "Italy", "Sleep_Hours": 7.6, "Screen_Hours": 6.2, "Annual_Work_Hours": 1669, "Sleep_Score": 92, "Screen_Score": 78, "Work_Score": 62, "Tension_Index_v1": 77.3, "Region": "Europe"},
+              {"Country": "Spain", "Sleep_Hours": 7.6, "Screen_Hours": 6.4, "Annual_Work_Hours": 1644, "Sleep_Score": 92, "Screen_Score": 80, "Work_Score": 59, "Tension_Index_v1": 77.0, "Region": "Europe"},
+              {"Country": "Canada", "Sleep_Hours": 7.5, "Screen_Hours": 6.7, "Annual_Work_Hours": 1685, "Sleep_Score": 95, "Screen_Score": 84, "Work_Score": 64, "Tension_Index_v1": 81.0, "Region": "Americas"},
+              {"Country": "Australia", "Sleep_Hours": 7.35, "Screen_Hours": 6.1, "Annual_Work_Hours": 1707, "Sleep_Score": 97, "Screen_Score": 76, "Work_Score": 66, "Tension_Index_v1": 79.7, "Region": "Asia & Oceania"},
+              {"Country": "Netherlands", "Sleep_Hours": 8.0, "Screen_Hours": 5.8, "Annual_Work_Hours": 1427, "Sleep_Score": 79, "Screen_Score": 73, "Work_Score": 34, "Tension_Index_v1": 62.0, "Region": "Europe"},
+              {"Country": "Switzerland", "Sleep_Hours": 7.8, "Screen_Hours": 5.1, "Annual_Work_Hours": 1573, "Sleep_Score": 86, "Screen_Score": 64, "Work_Score": 51, "Tension_Index_v1": 67.0, "Region": "Europe"},
+              {"Country": "Sweden", "Sleep_Hours": 7.5, "Screen_Hours": 6.0, "Annual_Work_Hours": 1440, "Sleep_Score": 95, "Screen_Score": 75, "Work_Score": 36, "Tension_Index_v1": 68.7, "Region": "Europe"},
+              {"Country": "Norway", "Sleep_Hours": 7.6, "Screen_Hours": 5.9, "Annual_Work_Hours": 1427, "Sleep_Score": 92, "Screen_Score": 74, "Work_Score": 34, "Tension_Index_v1": 66.7, "Region": "Europe"},
+              {"Country": "Denmark", "Sleep_Hours": 7.9, "Screen_Hours": 5.7, "Annual_Work_Hours": 1372, "Sleep_Score": 82, "Screen_Score": 71, "Work_Score": 28, "Tension_Index_v1": 60.3, "Region": "Europe"},
+              {"Country": "Finland", "Sleep_Hours": 7.8, "Screen_Hours": 5.6, "Annual_Work_Hours": 1550, "Sleep_Score": 86, "Screen_Score": 70, "Work_Score": 48, "Tension_Index_v1": 68.0, "Region": "Europe"},
+              {"Country": "Belgium", "Sleep_Hours": 7.7, "Screen_Hours": 5.9, "Annual_Work_Hours": 1585, "Sleep_Score": 89, "Screen_Score": 74, "Work_Score": 52, "Tension_Index_v1": 71.7, "Region": "Europe"},
+              {"Country": "Austria", "Sleep_Hours": 7.9, "Screen_Hours": 5.4, "Annual_Work_Hours": 1400, "Sleep_Score": 82, "Screen_Score": 68, "Work_Score": 31, "Tension_Index_v1": 60.3, "Region": "Europe"},
+              {"Country": "Portugal", "Sleep_Hours": 7.4, "Screen_Hours": 7.8, "Annual_Work_Hours": 1720, "Sleep_Score": 97, "Screen_Score": 98, "Work_Score": 68, "Tension_Index_v1": 87.7, "Region": "Europe"},
+              {"Country": "Ireland", "Sleep_Hours": 7.5, "Screen_Hours": 6.3, "Annual_Work_Hours": 1775, "Sleep_Score": 95, "Screen_Score": 79, "Work_Score": 75, "Tension_Index_v1": 83.0, "Region": "Europe"},
+              {"Country": "New Zealand", "Sleep_Hours": 7.6, "Screen_Hours": 5.9, "Annual_Work_Hours": 1748, "Sleep_Score": 92, "Screen_Score": 74, "Work_Score": 72, "Tension_Index_v1": 79.3, "Region": "Asia & Oceania"},
+              {"Country": "Poland", "Sleep_Hours": 7.2, "Screen_Hours": 6.6, "Annual_Work_Hours": 1830, "Sleep_Score": 98, "Screen_Score": 83, "Work_Score": 81, "Tension_Index_v1": 87.3, "Region": "Europe"},
+              {"Country": "Argentina", "Sleep_Hours": 8.2, "Screen_Hours": 9.4, "Annual_Work_Hours": 1600, "Sleep_Score": 72, "Screen_Score": 94, "Work_Score": 54, "Tension_Index_v1": 73.3, "Region": "Americas"},
+              {"Country": "Malaysia", "Sleep_Hours": 7.1, "Screen_Hours": 8.2, "Annual_Work_Hours": 1870, "Sleep_Score": 99, "Screen_Score": 82, "Work_Score": 84, "Tension_Index_v1": 88.3, "Region": "Asia & Oceania"},
+              {"Country": "Singapore", "Sleep_Hours": 7.0, "Screen_Hours": 7.3, "Annual_Work_Hours": 1890, "Sleep_Score": 100, "Screen_Score": 91, "Work_Score": 86, "Tension_Index_v1": 92.3, "Region": "Asia & Oceania"},
+              {"Country": "Vietnam", "Sleep_Hours": 6.9, "Screen_Hours": 6.8, "Annual_Work_Hours": 1950, "Sleep_Score": 100, "Screen_Score": 85, "Work_Score": 91, "Tension_Index_v1": 92.0, "Region": "Asia & Oceania"},
+              {"Country": "China", "Sleep_Hours": 8.5, "Screen_Hours": 5.9, "Annual_Work_Hours": 2174, "Sleep_Score": 60, "Screen_Score": 74, "Work_Score": 100, "Tension_Index_v1": 78.0, "Region": "Asia & Oceania"},
+              {"Country": "Turkey", "Sleep_Hours": 8.3, "Screen_Hours": 7.9, "Annual_Work_Hours": 1832, "Sleep_Score": 68, "Screen_Score": 99, "Work_Score": 81, "Tension_Index_v1": 82.7, "Region": "Asia & Oceania"},
+              {"Country": "Russia", "Sleep_Hours": 7.7, "Screen_Hours": 7.8, "Annual_Work_Hours": 1965, "Sleep_Score": 89, "Screen_Score": 98, "Work_Score": 92, "Tension_Index_v1": 93.0, "Region": "Europe"},
+              {"Country": "South Africa", "Sleep_Hours": 7.6, "Screen_Hours": 9.3, "Annual_Work_Hours": 1500, "Sleep_Score": 92, "Screen_Score": 93, "Work_Score": 42, "Tension_Index_v1": 75.7, "Region": "Asia & Oceania"},
+              {"Country": "Saudi Arabia", "Sleep_Hours": 7.2, "Screen_Hours": 8.5, "Annual_Work_Hours": 1980, "Sleep_Score": 98, "Screen_Score": 85, "Work_Score": 94, "Tension_Index_v1": 92.3, "Region": "Asia & Oceania"},
+              {"Country": "United Arab Emirates", "Sleep_Hours": 7.0, "Screen_Hours": 8.0, "Annual_Work_Hours": 2050, "Sleep_Score": 100, "Screen_Score": 100, "Work_Score": 97, "Tension_Index_v1": 99.0, "Region": "Asia & Oceania"}
+            ]
+          },
+          "params": [
+            {"name": "region_selection", "value": null}
+          ],
+          "transform": [
+            {"filter": "region_selection == null || datum.Region == region_selection"}
+          ],
+          "hconcat": [
+            {
+              "width": 500,
+              "height": 400,
+              "projection": {"type": "naturalEarth1"},
+              "layer": [
+                {
+                  "data": {
+                    "url": "https://raw.githubusercontent.com/vega/vega-datasets/main/data/world-110m.json",
+                    "format": {"type": "topojson", "feature": "countries"}
+                  },
+                  "mark": {"type": "geoshape", "fill": "#eee", "stroke": "#fff"}
+                },
+                {
+                  "transform": [
+                    {
+                      "lookup": "Country",
+                      "from": {
+                        "data": {
+                          "url": "https://raw.githubusercontent.com/vega/vega-datasets/main/data/world-110m.json",
+                          "format": {"type": "topojson", "feature": "countries"}
+                        },
+                        "key": "properties.name"
+                      },
+                      "as": "geo"
+                    },
+                    {"filter": "datum.geo"}
+                  ],
+                  "mark": {"type": "geoshape", "stroke": "#fff"},
+                  "encoding": {
+                    "shape": {"field": "geo", "type": "geojson"},
+                    "color": {
+                      "field": "Tension_Index_v1",
+                      "type": "quantitative",
+                      "scale": {"scheme": "redyellowgreen", "domain": [100, 0]},
+                      "legend": {
+                        "title": "Tension Index",
+                        "orient": "bottom-left",
+                        "titleFontSize": 12,
+                        "labelFontSize": 10,
+                        "gradientLength": 200,
+                        "format": ".0f",
+                        "values": [0, 25, 50, 75, 100]
+                      }
+                    },
+                    "tooltip": [
+                      {"field": "Country", "type": "nominal"},
+                      {"field": "Tension_Index_v1", "type": "quantitative", "title": "Tension Index", "format": ".1f"},
+                      {"field": "Sleep_Hours", "type": "quantitative", "title": "Sleep Hours", "format": ".2f"},
+                      {"field": "Screen_Hours", "type": "quantitative", "title": "Screen Hours", "format": ".2f"},
+                      {"field": "Annual_Work_Hours", "type": "quantitative", "title": "Annual Work Hours"}
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "width": 250,
+              "height": 400,
+              "title": {"text": "Top 20 Countries", "anchor": "start", "fontSize": 14, "fontWeight": 600},
+              "transform": [
+                {"window": [{"op": "rank", "as": "rank"}], "sort": [{"field": "Tension_Index_v1", "order": "descending"}]},
+                {"filter": "datum.rank <= 20"}
+              ],
+              "mark": "bar",
+              "encoding": {
+                "y": {"field": "Country", "type": "nominal", "sort": "-x", "axis": {"title": null, "labelFontSize": 11}},
+                "x": {"field": "Tension_Index_v1", "type": "quantitative", "axis": {"title": "Tension Index", "titleFontSize": 12, "labelFontSize": 10}},
+                "color": {
+                  "field": "Tension_Index_v1",
+                  "type": "quantitative",
+                  "scale": {"scheme": "redyellowgreen", "domain": [100, 0]},
+                  "legend": null
+                },
+                "tooltip": [
+                  {"field": "Country", "type": "nominal"},
+                  {"field": "Tension_Index_v1", "type": "quantitative", "title": "Tension Index", "format": ".1f"},
+                  {"field": "Sleep_Hours", "type": "quantitative", "title": "Sleep Hours", "format": ".2f"},
+                  {"field": "Screen_Hours", "type": "quantitative", "title": "Screen Hours", "format": ".2f"},
+                  {"field": "Annual_Work_Hours", "type": "quantitative", "title": "Annual Work Hours"}
+                ]
+              }
+            }
+          ]
+        };
+
+        let vegaView;
+
+        vegaEmbed('#visualization', spec, { actions: false })
+          .then(result => {
+            vegaView = result.view;
+            setupFilters();
+          })
+          .catch(console.error);
+        
+        function setupFilters() {
+            const buttons = document.querySelectorAll('.filters button');
+            buttons.forEach(button => {
+                button.addEventListener('click', () => {
+                    let region = button.id.split('-')[1];
+                    if (region === 'all') region = null;
+                    if (region === 'asia' ) region = 'Asia & Oceania';
+                    if (region === 'americas' ) region = 'Americas';
+                    if (region === 'europe' ) region = 'Europe';
+
+                    // Special case for combined region
+                    if (button.id === 'filter-asia-oceania') region = 'Asia & Oceania';
+
+                    vegaView.signal("region_selection", region).run();
+
+                    buttons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                });
+            });
+        }
+
+    </script>
+
+</body>
+</html>
