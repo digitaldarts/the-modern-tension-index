@@ -52,7 +52,15 @@ const color = d3.scaleSequential()
 
   const dataMap = new Map(data.map(d => [d.country.toLowerCase(), d]));
   const countries = topojson.feature(world, world.objects.countries).features;
-
+  
+// Alias fixes for mismatched country names between CSV and GeoJSON
+dataMap.set("united states of america", dataMap.get("united states"));
+dataMap.set("russian federation", dataMap.get("russia"));
+dataMap.set("turkiye", dataMap.get("turkey"));
+dataMap.set("united republic of tanzania", dataMap.get("tanzania"));
+dataMap.set("korea republic of", dataMap.get("south korea"));
+dataMap.set("viet nam", dataMap.get("vietnam"));
+  
   const g = svg.append("g");
 
   g.selectAll("path")
@@ -93,5 +101,6 @@ const color = d3.scaleSequential()
 </script>
 </body>
 </html>
+
 
 
